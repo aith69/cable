@@ -1,3 +1,8 @@
+function themeColor(name, fallback) {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return value || fallback;
+}
+
 /** Disegna il QR code nel contenitore con la libreria QRCode (public/vendor/qrcode.min.js). */
 export function renderQr(container, text) {
   const QR = globalThis.QRCode;
@@ -8,8 +13,8 @@ export function renderQr(container, text) {
     text,
     width: 512,
     height: 512,
-    colorDark: '#000000',
-    colorLight: '#ffffff',
+    colorDark: themeColor('--bg', '#000000'), // moduli: scuri, come lo sfondo del sito
+    colorLight: themeColor('--fg', '#ffffff'), // fondo: chiaro, come il testo del sito
     correctLevel: QR.CorrectLevel.M,
   });
   // La libreria scrive il testo (con l'ID di sessione) nel tooltip: lo togliamo.
