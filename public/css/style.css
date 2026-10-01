@@ -122,3 +122,26 @@ h1 {
   background: var(--fg);
   transition: width 0.25s linear;
 }
+.progress {
+  width: 100%;
+}
+.stats {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0 0.5rem;
+}
+.stats div {
+  text-align: left;
+}
+.stats div:last-child {
+  text-align: right;
+}
+.stats dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.stats dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}

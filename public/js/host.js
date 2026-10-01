@@ -1,6 +1,7 @@
 import { connectSignaling } from './signaling.js';
 import { renderQr } from './qr.js';
 import { startCountdown } from './countdown.js';
+import { runTransfer } from './transfer.js';
 import { $, showScreen, showMessage } from './ui.js';
 
 /**
@@ -10,6 +11,7 @@ import { $, showScreen, showMessage } from './ui.js';
 export function startHost(ctx, { mode, file = null }) {
   const { t } = ctx;
   let sig = null;
+  let transfer = null;
   let done = false;
   let stopTimer = () => {};
 
@@ -25,6 +27,12 @@ export function startHost(ctx, { mode, file = null }) {
       onHome: ctx.goHome,
       onRenew: renew ? () => startHost(ctx, { mode, file }) : null,
     });
+  };
+  const onEnd = (key, params, action) => {
+    if (done) return;
+    cleanup();
+    if (key === null) return ctx.goHome();
+    showMessage(t(key, params), { onHome: ctx.goHome, onSave: action });
   };
 
   $('qr').replaceChildren();
@@ -56,21 +64,20 @@ export function startHost(ctx, { mode, file = null }) {
 
       s.on('peer-joined', () => {
         stopTimer();
-        $('transfer-status').textContent = t('transfer.connecting');
-        const fileLine = $('transfer-file');
-        fileLine.hidden = !file;
-        if (file) fileLine.textContent = t('file.selected', { name: file.name });
-        $('transfer-stop').onclick = () => {
-          cleanup();
-          ctx.goHome();
-        };
-        showScreen('transfer');
+        transfer = runTransfer(ctx, { sig: s, initiator: true, role: mode, file, onEnd });
+        transfer.show();
       });
 
-      s.on('peer-left', () => stop('transfer.interrupted'));
+      s.on('signal', (msg) => transfer?.signal(msg.data));
+      s.on('peer-left', () => (transfer ? transfer.peerLeft() : stop('transfer.interrupted')));
       s.on('expired', () => stop('session.expired', { renew: true }));
-      s.on('error', () => stop('error.generic'));
-      s.on('close', () => stop('error.generic'));
+      // A trasferimento avviato il collegamento è diretto: il signaling non serve più.
+      s.on('error', () => {
+        if (!transfer) stop('error.generic');
+      });
+      s.on('close', () => {
+        if (!transfer) stop('error.generic');
+      });
 
       s.send({ type: 'create', mode });
     })

@@ -24,5 +24,12 @@
   "error.generic": "Qualcosa è andato storto",
   "common.home": "Torna all'inizio",
   "session.renew": "Genera un nuovo codice",
-  "file.selected": "File: {name}"
+  "file.selected": "File: {name}",
+  "transfer.sending": "Invio in corso…",
+  "transfer.receiving": "Ricezione in corso…",
+  "transfer.sizeOf": "{done} di {total}",
+  "transfer.saveAgain": "Salva di nuovo",
+  "transfer.cancelledByPeer": "L'altro dispositivo ha interrotto il trasferimento",
+  "transfer.failed": "Impossibile collegare direttamente i due dispositivi. Controlla la rete e riprova.",
+  "transfer.tooLarge": "Il file è troppo grande per il dispositivo che riceve (max {max})"
 }

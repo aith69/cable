@@ -24,5 +24,12 @@
   "error.generic": "Something went wrong",
   "common.home": "Back to start",
   "session.renew": "Generate a new code",
-  "file.selected": "File: {name}"
+  "file.selected": "File: {name}",
+  "transfer.sending": "Sending…",
+  "transfer.receiving": "Receiving…",
+  "transfer.sizeOf": "{done} of {total}",
+  "transfer.saveAgain": "Save again",
+  "transfer.cancelledByPeer": "The other device stopped the transfer",
+  "transfer.failed": "Could not connect the two devices directly. Check the network and try again.",
+  "transfer.tooLarge": "The file is too large for the receiving device (max {max})"
 }

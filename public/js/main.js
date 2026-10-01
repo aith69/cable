@@ -14,8 +14,22 @@ const { lang, messages } = await loadTranslations({ languages: preferred });
 const t = createTranslator(messages);
 applyTranslations(document, t, lang);
 
+async function loadIceServers() {
+  try {
+    const res = await fetch('/api/config', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.iceServers)) return data.iceServers;
+    }
+  } catch {
+    /* si prosegue senza server ICE: funziona solo in rete locale */
+  }
+  return [];
+}
+
 const ctx = {
   t,
+  iceServers: await loadIceServers(),
   signalingUrl: `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`,
   goHome() {
     history.replaceState(null, '', location.pathname + location.search);

@@ -16,6 +16,11 @@ export function createServer(options = {}) {
       return res.end(JSON.stringify({ status: 'ok' }));
     }
 
+    if (req.url === '/api/config') {
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
+      return res.end(JSON.stringify({ iceServers: options.iceServers ?? config.iceServers }));
+    }
+
     serveStatic(req, res).catch(() => {
       if (!res.headersSent) res.writeHead(500);
       res.end();
