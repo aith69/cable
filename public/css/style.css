@@ -1,0 +1,124 @@
+:root {
+  --bg: #15181d;
+  --fg: #f1f3f5;
+  --muted: #a7aeb6;
+  --surface: #20252c;
+  --surface-hover: #2a3038;
+  --border: #353c45;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+main {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+.screen {
+  width: 100%;
+  max-width: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+h1 {
+  margin: 0 0 1rem;
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.hint,
+.muted {
+  margin: 0;
+}
+.hint {
+  font-size: 1.125rem;
+}
+.muted {
+  color: var(--muted);
+  word-break: break-word;
+}
+.btn {
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.75rem 1.25rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.05s;
+}
+.btn:hover {
+  background: var(--surface-hover);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+.btn.primary {
+  color: var(--bg);
+  background: var(--fg);
+  border-color: var(--fg);
+}
+.btn.primary:hover {
+  opacity: 0.9;
+}
+.qr {
+  width: min(100%, 20rem);
+  aspect-ratio: 1;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.qr svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.timer {
+  width: 100%;
+}
+.timer .muted {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+.timer-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.timer-bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--fg);
+  transition: width 0.25s linear;
+}

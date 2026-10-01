@@ -21,5 +21,8 @@
   "room.join": "Entra in una stanza",
   "room.code": "Codice stanza",
   "room.password": "Password",
-  "error.generic": "Qualcosa è andato storto"
+  "error.generic": "Qualcosa è andato storto",
+  "common.home": "Torna all'inizio",
+  "session.renew": "Genera un nuovo codice",
+  "file.selected": "File: {name}"
 }

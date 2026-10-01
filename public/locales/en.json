@@ -21,5 +21,8 @@
   "room.join": "Join a room",
   "room.code": "Room code",
   "room.password": "Password",
-  "error.generic": "Something went wrong"
+  "error.generic": "Something went wrong",
+  "common.home": "Back to start",
+  "session.renew": "Generate a new code",
+  "file.selected": "File: {name}"
 }

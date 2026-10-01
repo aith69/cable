@@ -3,12 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#15181d">
   <title data-i18n="app.title">Cable</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1 data-i18n="app.title">Cable</h1>
-  <button data-i18n="home.send">Send a file</button>
-  <button data-i18n="home.receive">Receive a file</button>
+  <main>
+    <section class="screen" data-screen="home" hidden>
+      <h1 data-i18n="app.title">Cable</h1>
+      <button id="btn-send" class="btn primary" data-i18n="home.send">Send a file</button>
+      <button id="btn-receive" class="btn" data-i18n="home.receive">Receive a file</button>
+      <input id="file-send" type="file" hidden>
+    </section>
+
+    <section class="screen" data-screen="host" hidden>
+      <p class="hint" data-i18n="receive.scanHint">Scan this QR code with the other device</p>
+      <div id="qr" class="qr" role="img" data-i18n-aria-label="receive.scanHint"></div>
+      <div class="timer">
+        <div class="timer-bar"><span id="timer-fill"></span></div>
+        <p id="timer-text" class="muted"></p>
+      </div>
+      <button id="host-cancel" class="btn" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="guest" hidden>
+      <p id="guest-status" class="hint"></p>
+      <p id="guest-file" class="muted" hidden></p>
+      <button id="guest-upload" class="btn primary" data-i18n="upload.button" hidden>Upload file</button>
+      <input id="file-upload" type="file" hidden>
+      <button id="guest-cancel" class="btn" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="transfer" hidden>
+      <p id="transfer-status" class="hint"></p>
+      <p id="transfer-file" class="muted" hidden></p>
+      <button id="transfer-stop" class="btn" data-i18n="transfer.stop">Stop transfer</button>
+    </section>
+
+    <section class="screen" data-screen="message" hidden>
+      <p id="message-text" class="hint"></p>
+      <button id="message-renew" class="btn primary" data-i18n="session.renew" hidden>Generate a new code</button>
+      <button id="message-home" class="btn" data-i18n="common.home">Back to start</button>
+    </section>
+  </main>
+
+  <script src="/vendor/qrcode.js"></script>
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>

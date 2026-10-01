@@ -9,9 +9,16 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "build:css": "lessc public/css/style.less public/css/style.css",
+    "vendor": "mkdir -p public/vendor && cp node_modules/qrcode-generator/qrcode.js public/vendor/qrcode.js",
+    "build": "npm run vendor && npm run build:css"
   },
   "dependencies": {
     "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "less": "^4.9.1",
+    "qrcode-generator": "^1.4.4"
   }
 }
