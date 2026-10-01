@@ -4,9 +4,14 @@
   "description": "Direct device-to-device file transfer in the browser via QR code",
   "type": "module",
   "license": "MIT",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server/index.js",
     "test": "node --test"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
   }
 }
