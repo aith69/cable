@@ -26,7 +26,7 @@ test('GET / serve index.html', async () => {
   const res = await fetch(`${base}/`);
   assert.equal(res.status, 200);
   assert.match(res.headers.get('content-type'), /text\/html/);
-  assert.match(await res.text(), /<title>Cable<\/title>/);
+  assert.match(await res.text(), /<title[^>]*>Cable<\/title>/);
 });
 
 test('file inesistente: 404', async () => {
