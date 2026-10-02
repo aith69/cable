@@ -14,6 +14,7 @@
       <button id="btn-send" class="btn primary" data-i18n="home.send">Send a file</button>
       <button id="btn-receive" class="btn" data-i18n="home.receive">Receive a file</button>
       <input id="file-send" type="file" hidden>
+      <button id="btn-code" class="link" data-i18n="code.have">I have a code</button>
     </section>
 
     <section class="screen" data-screen="host" hidden>
@@ -23,7 +24,37 @@
         <div class="timer-bar"><span id="timer-fill"></span></div>
         <p id="timer-text" class="muted"></p>
       </div>
+      <button id="host-code-link" class="link" data-i18n="code.link" hidden>Connect without QR</button>
+      <div id="host-code" class="code-box" hidden>
+        <p class="muted" data-i18n="code.yourCode">Enter this code on the other device</p>
+        <p id="host-code-value" class="code-value"></p>
+      </div>
       <button id="host-cancel" class="btn" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="code" hidden>
+      <p class="hint" data-i18n="code.enter">Enter the code shown on the other device</p>
+      <form id="code-form" class="code-form" autocomplete="off">
+        <input id="code-input" class="code-input" type="text" inputmode="numeric" pattern="[0-9 -]*"
+               maxlength="9" enterkeyhint="go" autocomplete="off" placeholder="000 - 000"
+               data-i18n-aria-label="code.enter">
+        <p id="code-error" class="code-error" role="alert" hidden></p>
+        <button id="code-submit" class="btn primary" type="submit" data-i18n="code.connect" disabled>Connect</button>
+      </form>
+      <button id="code-cancel" class="btn" type="button" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="choose" hidden>
+      <p class="hint" data-i18n="verify.choose">Tap the emoji you see on the other device</p>
+      <div id="choose-options" class="emoji-options"></div>
+      <button id="choose-cancel" class="btn" type="button" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="verify" hidden>
+      <p class="hint" data-i18n="verify.hostPrompt">Tell them this emoji</p>
+      <div id="verify-emoji" class="emoji-big"></div>
+      <p id="verify-name" class="hint"></p>
+      <button id="verify-cancel" class="btn" type="button" data-i18n="common.cancel">Cancel</button>
     </section>
 
     <section class="screen" data-screen="guest" hidden>

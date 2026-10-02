@@ -131,3 +131,105 @@ h1 {
   dt { color: var(--muted); font-size: .85rem; }
   dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 }
+
+// Link discreti (secondari rispetto ai pulsanti)
+.link {
+  padding: .5rem .75rem;
+  font: inherit;
+  font-size: .95rem;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+
+  &:hover { color: var(--fg); }
+  &:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; border-radius: 6px; }
+}
+
+// Codice a 6 cifre
+.code-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.code-value {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.code-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: @gap;
+}
+
+.code-input {
+  width: 100%;
+  padding: .75rem 1rem;
+  font: inherit;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: .08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: @radius;
+
+  &:focus { outline: 2px solid var(--fg); outline-offset: 2px; }
+  &::placeholder { color: var(--muted); opacity: .6; }
+}
+
+.code-error {
+  margin: 0;
+  padding: .75rem 1rem;
+  font-size: .95rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: @radius;
+}
+
+// Scelta dell'emoji
+.emoji-options {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+}
+
+.emoji-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  min-height: 7rem;
+  padding: 1rem .25rem;
+  font: inherit;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: @radius;
+  cursor: pointer;
+  transition: background .15s, transform .05s;
+
+  &:hover { background: var(--surface-hover); }
+  &:active { transform: scale(.97); }
+  &:disabled { opacity: .5; cursor: default; }
+  &:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+
+  .emoji { font-size: 2.75rem; line-height: 1.1; }
+  .name { font-size: .85rem; color: var(--muted); word-break: break-word; }
+}
+
+.emoji-big { font-size: 7rem; line-height: 1; }

@@ -38,6 +38,7 @@ const ctx = {
 };
 
 $('btn-receive').onclick = () => startHost(ctx, { mode: 'receive' });
+$('btn-code').onclick = () => startGuest(ctx);
 
 const fileInput = $('file-send');
 $('btn-send').onclick = () => fileInput.click();
@@ -48,5 +49,5 @@ fileInput.onchange = () => {
 };
 
 const id = location.hash.slice(1);
-if (/^[A-Za-z0-9_-]{16,64}$/.test(id)) startGuest(ctx, id);
+if (/^[A-Za-z0-9_-]{16,64}$/.test(id)) startGuest(ctx, { id });
 else showScreen('home');
