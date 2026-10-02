@@ -1,6 +1,7 @@
 import { createServer as createHttpServer } from 'node:http';
 import { createStaticHandler } from './static.js';
 import { SessionManager } from './sessions.js';
+import { AttemptLimiter } from './ratelimit.js';
 import { attachSignaling } from './signaling.js';
 import config from './config.js';
 
@@ -31,8 +32,14 @@ export function createServer(options = {}) {
     ttlMs: options.sessionTtlMs ?? config.sessionTtlMs,
     maxSessions: options.maxSessions ?? config.maxSessions,
   });
+  const limiter = new AttemptLimiter({
+    max: options.codeAttempts ?? config.codeAttempts,
+    windowMs: options.codeAttemptWindowMs ?? config.codeAttemptWindowMs,
+  });
   const signaling = attachSignaling(server, {
     sessions,
+    limiter,
+    trustProxy: options.trustProxy ?? config.trustProxy,
     maxMessageBytes: config.maxMessageBytes,
   });
 

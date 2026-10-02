@@ -26,5 +26,8 @@ export default {
   sessionTtlMs: Number(process.env.SESSION_TTL_MS) || 60_000,
   maxSessions: Number(process.env.MAX_SESSIONS) || 1000,
   maxMessageBytes: 64 * 1024,
+  trustProxy: ['1', 'true', 'yes'].includes(String(process.env.TRUST_PROXY).toLowerCase()),
+  codeAttempts: Number(process.env.CODE_ATTEMPTS) || 3,
+  codeAttemptWindowMs: Number(process.env.CODE_ATTEMPT_WINDOW_MS) || 60_000,
   iceServers: parseIceServers(process.env.ICE_SERVERS),
 };

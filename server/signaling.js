@@ -1,4 +1,6 @@
 import { WebSocketServer } from 'ws';
+import { AttemptLimiter } from './ratelimit.js';
+import { clientIp } from './clientip.js';
 
 const MODES = new Set(['send', 'receive']);
 const opposite = (mode) => (mode === 'send' ? 'receive' : 'send');
@@ -7,13 +9,20 @@ function send(ws, obj) {
   if (ws.readyState === ws.OPEN) ws.send(JSON.stringify(obj));
 }
 
-function fail(ws, code) {
-  send(ws, { type: 'error', code });
+function fail(ws, code, extra = {}) {
+  send(ws, { type: 'error', code, ...extra });
 }
 
 export function attachSignaling(
   httpServer,
-  { sessions, maxMessageBytes = 64 * 1024, path = '/ws', heartbeatMs = 30_000 },
+  {
+    sessions,
+    limiter = new AttemptLimiter(),
+    trustProxy = false,
+    maxMessageBytes = 64 * 1024,
+    path = '/ws',
+    heartbeatMs = 30_000,
+  },
 ) {
   const wss = new WebSocketServer({ noServer: true, maxPayload: maxMessageBytes });
 
@@ -34,12 +43,28 @@ export function attachSignaling(
   sessions.on('expired', (session) => {
     session.owner.sessionId = null;
     send(session.owner, { type: 'expired' });
+    if (session.pending) {
+      session.pending.guest.sessionId = null;
+      send(session.pending.guest, { type: 'expired' });
+    }
   });
 
   function leave(ws) {
-    if (!ws.sessionId) return;
-    const other = sessions.leave(ws.sessionId, ws);
+    const id = ws.sessionId;
+    if (!id) return;
     ws.sessionId = null;
+
+    // Chi era solo in verifica: la sessione resta aperta per l'host.
+    const verifying = sessions.cancelPending(id, ws);
+    if (verifying) return send(verifying.owner, { type: 'verify-cancelled' });
+
+    const session = sessions.get(id);
+    const waiting = session && session.owner === ws ? session.pending?.guest : null;
+    const other = sessions.leave(id, ws);
+    if (waiting) {
+      waiting.sessionId = null;
+      send(waiting, { type: 'peer-left' });
+    }
     if (other) {
       other.sessionId = null;
       send(other, { type: 'peer-left' });
@@ -70,6 +95,49 @@ export function attachSignaling(
       send(session.owner, { type: 'peer-joined', role: session.mode });
     },
 
+    'request-code'(ws) {
+      if (!ws.sessionId) return fail(ws, 'no_session');
+      const res = sessions.issueCode(ws.sessionId, ws);
+      if (res.error) return fail(ws, res.error);
+      send(ws, { type: 'code', code: res.code, expiresInMs: res.expiresInMs });
+    },
+
+    'join-code'(ws, msg) {
+      if (ws.sessionId) return fail(ws, 'already_in_session');
+      const gate = limiter.check(ws.ip);
+      if (!gate.allowed) return fail(ws, 'rate_limited', { retryAfterMs: gate.retryAfterMs });
+
+      const code = typeof msg.code === 'string' ? msg.code.replace(/\D/g, '') : '';
+      if (!/^\d{6}$/.test(code)) return fail(ws, 'bad_message');
+
+      const res = sessions.joinByCode(code, ws);
+      if (res.error) {
+        if (res.error === 'not_found') {
+          limiter.fail(ws.ip);
+          return fail(ws, 'code_not_found');
+        }
+        return fail(ws, res.error);
+      }
+      ws.sessionId = res.session.id;
+      send(ws, { type: 'challenge', options: res.options });
+      send(res.session.owner, { type: 'verify-request', emoji: res.correct });
+    },
+
+    verify(ws, msg) {
+      if (!ws.sessionId) return fail(ws, 'no_session');
+      const res = sessions.verify(ws.sessionId, ws, msg.emoji);
+      if (res.error === 'no_pending') return fail(ws, 'no_pending');
+      if (res.error === 'wrong') {
+        limiter.fail(ws.ip);
+        res.session.owner.sessionId = null;
+        ws.sessionId = null;
+        send(res.session.owner, { type: 'verify-failed' });
+        return fail(ws, 'verify_failed');
+      }
+      send(ws, { type: 'joined', role: opposite(res.session.mode) });
+      send(res.session.owner, { type: 'peer-joined', role: res.session.mode });
+    },
+
     signal(ws, msg) {
       if (!ws.sessionId) return fail(ws, 'no_session');
       if (msg.data === null || typeof msg.data !== 'object') return fail(ws, 'bad_message');
@@ -84,8 +152,9 @@ export function attachSignaling(
     },
   };
 
-  wss.on('connection', (ws) => {
+  wss.on('connection', (ws, req) => {
     ws.sessionId = null;
+    ws.ip = clientIp(req, trustProxy);
     ws.isAlive = true;
     ws.on('pong', () => {
       ws.isAlive = true;
@@ -121,8 +190,12 @@ export function attachSignaling(
   }, heartbeatMs);
   heartbeat.unref();
 
+  const sweeper = setInterval(() => limiter.sweep(), 60_000);
+  sweeper.unref();
+
   function shutdown() {
     clearInterval(heartbeat);
+    clearInterval(sweeper);
     for (const ws of wss.clients) ws.terminate();
     wss.close();
     sessions.closeAll();
