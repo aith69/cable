@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { createServer } from '../../server/server.js';
+import { createServer } from '../server/server.js';
 
 export function connectClient(url) {
   return new Promise((resolve, reject) => {

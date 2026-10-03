@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { setup } from './helpers/ws.js';
+import { setup } from '../support/ws.js';
 import { categoryOf } from '../public/js/emoji.js';
 
 const format = (code) => `${code.slice(0, 3)} - ${code.slice(3)}`;
