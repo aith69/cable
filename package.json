@@ -4,9 +4,29 @@
   "description": "Direct device-to-device file transfer in the browser via QR code",
   "type": "module",
   "license": "MIT",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "build:css": "lessc public/css/style.less public/css/style.css",
+    "build": "npm run build:css",
+    "font": "node scripts/font.js"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "less": "^4.9.1"
+  },
+  "author": "Alessandro Preti",
+  "homepage": "https://github.com/aith69/cable",
+  "bugs": {
+    "url": "https://github.com/aith69/cable/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aith69/cable.git"
   }
 }

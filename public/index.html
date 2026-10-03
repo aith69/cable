@@ -3,10 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cable</title>
+  <meta name="theme-color" content="#15181d">
+  <title data-i18n="app.title">Cable</title>
+  <!-- font:preload -->
+  <link rel="preload" href="/fonts/press-start-2p-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- /font:preload -->
+  <link rel="stylesheet" href="/css/font.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1>Cable</h1>
-  <p>Work in progress.</p>
+  <main>
+    <section class="screen" data-screen="home" hidden>
+      <h1 data-i18n="app.title">Cable</h1>
+      <button id="btn-send" class="btn primary" data-i18n="home.send">Send a file</button>
+      <button id="btn-receive" class="btn" data-i18n="home.receive">Receive a file</button>
+      <input id="file-send" type="file" hidden>
+      <button id="btn-code" class="link" data-i18n="code.have">I have a code</button>
+    </section>
+
+    <section class="screen" data-screen="host" hidden>
+      <p class="hint" data-i18n="receive.scanHint">Scan this QR code with the other device</p>
+      <div id="qr" class="qr" role="img" data-i18n-aria-label="receive.scanHint"></div>
+      <div class="timer">
+        <div class="timer-bar"><span id="timer-fill"></span></div>
+        <p id="timer-text" class="muted"></p>
+      </div>
+      <button id="host-code-link" class="link" data-i18n="code.link" hidden>Connect without QR</button>
+      <div id="host-code" class="code-box" hidden>
+        <p class="muted" data-i18n="code.yourCode">Enter this code on the other device</p>
+        <p id="host-code-value" class="code-value" dir="ltr"></p>
+      </div>
+      <button id="host-cancel" class="btn" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="code" hidden>
+      <p class="hint" data-i18n="code.enter">Enter the code shown on the other device</p>
+      <form id="code-form" class="code-form" autocomplete="off">
+        <input id="code-input" class="code-input" dir="ltr" type="text" inputmode="numeric" pattern="[0-9 -]*"
+               maxlength="9" enterkeyhint="go" autocomplete="off" placeholder="000 - 000"
+               data-i18n-aria-label="code.enter">
+        <p id="code-error" class="code-error" role="alert" hidden></p>
+        <button id="code-submit" class="btn primary" type="submit" data-i18n="code.connect" disabled>Connect</button>
+      </form>
+      <button id="code-cancel" class="btn" type="button" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="choose" hidden>
+      <p class="hint" data-i18n="verify.choose">Tap the emoji you see on the other device</p>
+      <div id="choose-options" class="emoji-options"></div>
+      <button id="choose-cancel" class="btn" type="button" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="verify" hidden>
+      <p class="hint" data-i18n="verify.hostPrompt">Tell them this emoji</p>
+      <div id="verify-emoji" class="emoji-big"></div>
+      <p id="verify-name" class="hint"></p>
+      <button id="verify-cancel" class="btn" type="button" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="guest" hidden>
+      <p id="guest-status" class="hint"></p>
+      <p id="guest-file" class="muted" hidden></p>
+      <button id="guest-upload" class="btn primary" data-i18n="upload.button" hidden>Upload file</button>
+      <input id="file-upload" type="file" hidden>
+      <button id="guest-cancel" class="btn" data-i18n="common.cancel">Cancel</button>
+    </section>
+
+    <section class="screen" data-screen="transfer" hidden>
+      <p id="transfer-status" class="hint"></p>
+      <p id="transfer-file" class="muted" hidden></p>
+      <div id="transfer-progress" class="progress" hidden>
+        <div class="timer-bar"><span id="progress-fill"></span></div>
+        <dl class="stats">
+          <div><dt data-i18n="transfer.speed">Speed</dt><dd id="stat-speed">—</dd></div>
+          <div><dt data-i18n="transfer.eta">Time left</dt><dd id="stat-eta">—</dd></div>
+        </dl>
+        <p id="stat-bytes" class="muted"></p>
+      </div>
+      <button id="transfer-stop" class="btn" data-i18n="transfer.stop">Stop transfer</button>
+    </section>
+
+    <section class="screen" data-screen="message" hidden>
+      <p id="message-text" class="hint"></p>
+      <button id="message-renew" class="btn primary" data-i18n="session.renew" hidden>Generate a new code</button>
+      <button id="message-save" class="btn primary" data-i18n="transfer.saveAgain" hidden>Save again</button>
+      <button id="message-home" class="btn" data-i18n="common.home">Back to start</button>
+    </section>
+  </main>
+
+  <script src="/vendor/qrcode.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>
