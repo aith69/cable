@@ -11,7 +11,8 @@
     "start": "node server/index.js",
     "test": "node --test",
     "build:css": "lessc public/css/style.less public/css/style.css",
-    "build": "npm run build:css"
+    "build": "npm run build:css",
+    "font": "node scripts/font.js"
   },
   "dependencies": {
     "ws": "^8.22.0"
