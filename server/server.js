@@ -1,12 +1,14 @@
 import { createServer as createHttpServer } from 'node:http';
 import { createStaticHandler } from './static.js';
+import { listLocales } from './locales.js';
 import { SessionManager } from './sessions.js';
 import { AttemptLimiter } from './ratelimit.js';
 import { attachSignaling } from './signaling.js';
 import config from './config.js';
 
 export function createServer(options = {}) {
-  const serveStatic = createStaticHandler(options.publicDir ?? config.publicDir);
+  const publicDir = options.publicDir ?? config.publicDir;
+  const serveStatic = createStaticHandler(publicDir);
 
   const server = createHttpServer((req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -20,6 +22,13 @@ export function createServer(options = {}) {
     if (req.url === '/api/config') {
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
       return res.end(JSON.stringify({ iceServers: options.iceServers ?? config.iceServers }));
+    }
+
+    if (req.url === '/api/locales') {
+      return listLocales(publicDir).then((locales) => {
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
+        res.end(JSON.stringify({ locales }));
+      });
     }
 
     serveStatic(req, res).catch(() => {

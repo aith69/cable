@@ -134,10 +134,10 @@ h1 {
   margin: 1rem 0 0.5rem;
 }
 .stats div {
-  text-align: left;
+  text-align: start;
 }
 .stats div:last-child {
-  text-align: right;
+  text-align: end;
 }
 .stats dt {
   color: var(--muted);
