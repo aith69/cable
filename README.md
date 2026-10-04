@@ -47,8 +47,8 @@ there is no time limit.
 ## Quick start
 
 ```bash
-git clone https://github.com/aith69/cable.git
-cd cable
+git clone https://github.com/aith69/vWire.git
+cd vWire
 npm ci --omit=dev
 npm start
 ```
@@ -60,7 +60,7 @@ The compiled CSS, the QR library and the font are included in the repository, so
 
 ```bash
 sudo useradd --system --no-create-home --shell /usr/sbin/nologin cable
-sudo git clone https://github.com/aith69/cable.git /opt/cable
+sudo git clone https://github.com/aith69/vWire.git /opt/cable
 cd /opt/cable
 sudo npm ci --omit=dev
 sudo chmod -R go+rX /opt/cable
