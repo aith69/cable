@@ -1,6 +1,6 @@
 {
   "name": "cable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Direct device-to-device file transfer in the browser via QR code",
   "type": "module",
   "license": "MIT",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "test": "node --test",
+    "test": "NODE_ENV=test node --test",
     "build:css": "lessc public/css/style.less public/css/style.css",
     "build": "npm run build:css",
     "font": "node scripts/font.js"
