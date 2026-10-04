@@ -92,7 +92,7 @@ test('loadTranslations: usa l\'elenco del server e non richiede file inesistenti
 });
 
 test('/api/locales: elenca solo i file json con un nome valido', async (t) => {
-  const dir = await mkdtemp(join(tmpdir(), 'cable-'));
+  const dir = await mkdtemp(join(tmpdir(), 'vwire-'));
   t.after(() => rm(dir, { recursive: true, force: true }));
   await mkdir(join(dir, 'locales'));
   for (const name of ['en.json', 'it.json', 'pt-BR.json', 'x.json', 'a b.json', 'notes.txt', 'it.json.bak']) {

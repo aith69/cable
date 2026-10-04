@@ -68,7 +68,7 @@ export function startHost(ctx, { mode, file = null }) {
         try {
           renderQr($('qr'), `${location.origin}/#${msg.id}`);
         } catch (err) {
-          console.error('[cable] QR', err);
+          console.error('[vwire] QR', err);
           return stop('error.generic');
         }
         countdown(msg.expiresInMs);
@@ -114,7 +114,7 @@ export function startHost(ctx, { mode, file = null }) {
       s.send({ type: 'create', mode });
     })
     .catch((err) => {
-      console.error('[cable]', err);
+      console.error('[vwire]', err);
       stop('error.generic');
     });
 }

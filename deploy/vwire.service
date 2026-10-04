@@ -1,0 +1,35 @@
+# Template used by deploy/install.sh. To install by hand:
+#   1. adjust User, Group, WorkingDirectory and ExecStart (check the node path with `command -v node`)
+#   2. sudo cp deploy/vwire.service /etc/systemd/system/vwire.service
+#   3. sudo systemctl daemon-reload && sudo systemctl enable --now vwire
+# Settings live in config.json in the app folder, not here.
+# The app folder must not be under /home or /root: ProtectHome=true hides them from the service.
+[Unit]
+Description=vWire - direct file transfer via QR code
+After=network.target
+
+[Service]
+Type=simple
+User=vwire
+Group=vwire
+WorkingDirectory=/opt/vwire
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node server/index.js
+Restart=on-failure
+RestartSec=3
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

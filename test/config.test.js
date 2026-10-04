@@ -9,7 +9,7 @@ import { DEFAULTS, DEFAULT_ICE_SERVERS, resolveConfig, loadConfig } from '../ser
 const root = join(fileURLToPath(import.meta.url), '..', '..');
 
 async function tempDir(t) {
-  const dir = await mkdtemp(join(tmpdir(), 'cable-config-'));
+  const dir = await mkdtemp(join(tmpdir(), 'vwire-config-'));
   t.after(() => rm(dir, { recursive: true, force: true }));
   return dir;
 }
@@ -24,9 +24,9 @@ test('valori predefiniti senza file né variabili', () => {
 });
 
 test('il file sovrascrive i predefiniti e le variabili sovrascrivono il file', () => {
-  const file = { name: 'AirCable', port: 8080, trustProxy: true };
+  const file = { name: 'AirWire', port: 8080, trustProxy: true };
   const fromFile = resolveConfig({ file });
-  assert.equal(fromFile.values.name, 'AirCable');
+  assert.equal(fromFile.values.name, 'AirWire');
   assert.equal(fromFile.values.port, 8080);
   assert.equal(fromFile.values.trustProxy, true);
   assert.equal(fromFile.values.host, DEFAULTS.host);
@@ -34,7 +34,7 @@ test('il file sovrascrive i predefiniti e le variabili sovrascrivono il file', (
   const both = resolveConfig({ file, env: { PORT: '9000', TRUST_PROXY: 'false' } });
   assert.equal(both.values.port, 9000);
   assert.equal(both.values.trustProxy, false);
-  assert.equal(both.values.name, 'AirCable');
+  assert.equal(both.values.name, 'AirWire');
 });
 
 test('variabili d\'ambiente: numeri, booleani e JSON; i valori vuoti sono ignorati', () => {
@@ -120,10 +120,10 @@ test('nome lungo: avviso, ma la configurazione resta valida', () => {
 test('loadConfig: legge il file; un file mancante non è un errore', async (t) => {
   const dir = await tempDir(t);
   const path = join(dir, 'config.json');
-  await writeFile(path, JSON.stringify({ name: 'AirCable', port: 4000 }));
+  await writeFile(path, JSON.stringify({ name: 'AirWire', port: 4000 }));
 
   const config = loadConfig({ env: {}, path, useFile: true });
-  assert.equal(config.name, 'AirCable');
+  assert.equal(config.name, 'AirWire');
   assert.equal(config.port, 4000);
   assert.equal(config.host, DEFAULTS.host);
   assert.deepEqual(config.warnings, []);

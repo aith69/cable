@@ -1,4 +1,4 @@
-# Cable
+# vWire
 
 Send a file from one device to another, straight from the browser, using a QR code.
 Nothing to install, and **the file never touches the server**: it travels directly between the two
@@ -58,30 +58,67 @@ The compiled CSS, the QR library and the font are included in the repository, so
 
 ## Install as a service (Debian / Arch)
 
-```bash
-sudo useradd --system --no-create-home --shell /usr/sbin/nologin cable
-sudo git clone https://github.com/aith69/vWire.git /opt/cable
-cd /opt/cable
-sudo npm ci --omit=dev
-sudo chmod -R go+rX /opt/cable
-sudo cp deploy/cable.service /etc/systemd/system/cable.service
-sudo systemctl daemon-reload
-sudo systemctl enable --now cable
-curl http://localhost:3000/health
-```
+The installer does everything in one go: it checks Node.js, creates an unprivileged system user, installs the
+dependencies, writes `config.json` from your answers, creates the systemd unit and starts the service.
+It asks a few questions; press Enter to keep the default shown in brackets.
 
-The service runs as an unprivileged user and cannot write anywhere on the system. Settings go in `/opt/cable/config.json` (see Configuration below); restart with `sudo systemctl restart cable` after changing them.
-Check the node path in `ExecStart` with `command -v node`.
+~~bash
+sudo git clone https://github.com/aith69/vWire.git /opt/vwire
+cd /opt/vwire
+sudo ./deploy/install.sh
+~~
+
+The folder must not be under `/home` or `/root` (the service is sandboxed and cannot read them). The service
+name is the folder name in lowercase (`vwire` here); use `--service` to choose another one.
+
+Without questions (for scripts, or when you already know the values):
+
+~~bash
+sudo ./deploy/install.sh --yes --set port=8080 --set trustProxy=true
+~~
+
+| Option | Meaning |
+|---|---|
+| `-y`, `--yes` | Do not ask anything: use the defaults and the `--set` values |
+| `--set KEY=VALUE` | Set a configuration value (repeatable). Rewrites `config.json`, saving the old one as `config.json.bak-DATE` |
+| `--service NAME` | systemd service name (default: folder name in lowercase) |
+| `--user NAME` | System user that runs the service (default `vwire`, created if missing) |
+| `--with-dev` | Also install the development dependencies, for a working copy |
+| `--no-start` | Install the service without starting it |
+| `--dry-run` | Show what would be done and change nothing |
+| `--print-unit` | Print the systemd unit and exit |
+| `--uninstall` | Stop and remove the service (folder, `config.json` and user are kept) |
+
+Running the installer again is safe: it refreshes the dependencies and the unit and restarts the service, and it
+keeps your `config.json` (unless you pass `--set`).
 
 Update:
 
-```bash
-cd /opt/cable && sudo git pull && sudo npm ci --omit=dev && sudo systemctl restart cable
-```
+~~bash
+cd /opt/vwire && sudo git pull && sudo ./deploy/install.sh --yes
+~~
+
+### Manual installation
+
+~~bash
+sudo useradd --system --no-create-home --user-group --shell /usr/sbin/nologin vwire   # Arch: /usr/bin/nologin
+sudo git clone https://github.com/aith69/vWire.git /opt/vwire
+cd /opt/vwire
+sudo npm ci --omit=dev --ignore-scripts
+sudo chmod -R go+rX /opt/vwire
+sudo cp deploy/vwire.service /etc/systemd/system/vwire.service
+# edit User, Group, WorkingDirectory and ExecStart in that file (node path: `command -v node`)
+sudo systemctl daemon-reload
+sudo systemctl enable --now vwire
+curl http://localhost:3000/health
+~~
+
+Settings go in `config.json` (see Configuration below), not in the unit file. If it contains TURN credentials,
+make it readable only by root and the service user: `sudo chown root:vwire config.json && sudo chmod 640 config.json`.
 
 ## Behind a reverse proxy
 
-Cable needs the proxy to forward WebSockets on `/ws`. Ready-to-edit examples:
+vWire needs the proxy to forward WebSockets on `/ws`. Ready-to-edit examples:
 
 - nginx: [`deploy/nginx.conf.example`](deploy/nginx.conf.example)
 - Caddy: [`deploy/Caddyfile.example`](deploy/Caddyfile.example)
@@ -93,19 +130,19 @@ otherwise anyone could fake the header and dodge the limit on wrong codes.
 ## Configuration
 
 All settings live in one optional file, `config.json`, in the application folder.
-Without it Cable uses the defaults.
+Without it vWire uses the defaults.
 
 ~~bash
 cp config.example.json config.json
 nano config.json            # keep only the keys you want to change
-sudo systemctl restart cable
+sudo systemctl restart vwire
 ~~
 
 Example, to change the name and the port:
 
 ~~json
 {
-  "name": "AirCable",
+  "name": "AirWire",
   "port": 8080
 }
 ~~
@@ -116,7 +153,7 @@ handy for your own notes).
 
 | Key | Default | Meaning | Environment variable |
 |---|---|---|---|
-| `name` | `Cable` | Name shown as page title and heading, 1-30 characters. Not translated | `APP_NAME` |
+| `name` | `vWire` | Name shown as page title and heading, 1-30 characters. Not translated | `APP_NAME` |
 | `port` | `3000` | Listening port | `PORT` |
 | `host` | `0.0.0.0` | Listening address (`127.0.0.1` = this machine only) | `HOST` |
 | `trustProxy` | `false` | Read the client address from `X-Real-IP` (behind a reverse proxy only) | `TRUST_PROXY` |
@@ -127,8 +164,8 @@ handy for your own notes).
 | `iceServers` | Google STUN | List of STUN/TURN servers. `[]` = local network only | `ICE_SERVERS` (JSON) |
 
 Values are read in this order, and the last one wins: built-in defaults, `config.json`, environment variables.
-If a value is not valid, or a key is misspelled, Cable refuses to start and says what is wrong
-(see `journalctl -u cable`). Set `CONFIG_FILE` to use a file in another location.
+If a value is not valid, or a key is misspelled, vWire refuses to start and says what is wrong
+(see `journalctl -u vwire`). Set `CONFIG_FILE` to use a file in another location.
 
 Example with a TURN server (useful on strict networks, such as some mobile carriers; note that when a TURN
 server is used the encrypted data goes through it):
@@ -143,7 +180,7 @@ server is used the encrypted data goes through it):
 ~~
 
 If `config.json` contains TURN credentials, make it readable only by root and the service user:
-`sudo chown root:cable config.json && sudo chmod 640 config.json`.
+`sudo chown root:vwire config.json && sudo chmod 640 config.json`.
 
 Limits: the receiving device keeps the file in memory until the transfer ends, so files are limited to
 **2 GiB** (**1 GiB** on iPhone and iPad). Larger files are refused with a clear message.
@@ -153,7 +190,7 @@ The title font is configured separately, in `font.config.json`, because it is a 
 
 ## Customize
 
-**Name.** Set `name` in `config.json`. It is the page title and heading, and there is nothing else to edit. It is not translated. The title font is wide: with the default settings keep the name to 9 characters or fewer, or lower `titleSize` in `font.config.json` and run `npm run font`. Cable prints a warning at startup if the name is too long.
+**Name.** Set `name` in `config.json`. It is the page title and heading, and there is nothing else to edit. It is not translated. The title font is wide: with the default settings keep the name to 9 characters or fewer, or lower `titleSize` in `font.config.json` and run `npm run font`. vWire prints a warning at startup if the name is too long.
 
 **Languages.** The language is detected from the browser, with English as the fallback. Translations are the
 files in `public/locales`, named after the language (`en.json`, `it.json`, `pt-BR.json`, `zh-TW.json`...).

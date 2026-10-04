@@ -7,7 +7,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const DEFAULT_ICE_SERVERS = [{ urls: 'stun:stun.l.google.com:19302' }];
 
 export const DEFAULTS = {
-  name: 'Cable',
+  name: 'vWire',
   port: 3000,
   host: '0.0.0.0',
   trustProxy: false,
@@ -63,7 +63,7 @@ function checkIceServers(value) {
     : 'una lista di server, per esempio [{"urls":"stun:stun.example.org:3478"}] (anche vuota: [])';
 }
 
-const RULES = {
+export const RULES = {
   name: {
     env: 'APP_NAME',
     parse: (text) => text,
@@ -171,7 +171,7 @@ export function loadConfig({
         throw new Error(`${path} non è un JSON valido: ${err.message}`);
       }
       if (!file || typeof file !== 'object' || Array.isArray(file)) {
-        throw new Error(`${path} deve contenere un oggetto JSON, per esempio { "name": "Cable" }`);
+        throw new Error(`${path} deve contenere un oggetto JSON, per esempio { "name": "vWire" }`);
       }
     }
   }
