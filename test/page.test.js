@@ -20,22 +20,22 @@ async function listen(t, options) {
 
 test('renderPage: sostituisce il nome ovunque e protegge dall\'HTML', () => {
   assert.equal(
-    renderPage('<h1>{{name}}</h1><title>{{name}}</title>', { name: 'AirCable' }),
-    '<h1>AirCable</h1><title>AirCable</title>',
+    renderPage('<h1>{{name}}</h1><title>{{name}}</title>', { name: 'AirWire' }),
+    '<h1>AirWire</h1><title>AirWire</title>',
   );
   assert.equal(escapeHtml('<b>"A" & \'B\'</b>'), '&lt;b&gt;&quot;A&quot; &amp; &#39;B&#39;&lt;/b&gt;');
   assert.equal(renderPage('{{name}}', { name: '$&' }), '$&amp;');
 });
 
 test('GET /, /index.html e /?lang=it mostrano il nome configurato', async (t) => {
-  const base = await listen(t, { name: 'AirCable' });
+  const base = await listen(t, { name: 'AirWire' });
   for (const path of ['/', '/index.html', '/?lang=it']) {
     const res = await fetch(base + path);
     assert.equal(res.status, 200, path);
     assert.match(res.headers.get('content-type'), /text\/html/);
     const html = await res.text();
-    assert.match(html, /<title>AirCable<\/title>/);
-    assert.match(html, /<h1>AirCable<\/h1>/);
+    assert.match(html, /<title>AirWire<\/title>/);
+    assert.match(html, /<h1>AirWire<\/h1>/);
     assert.doesNotMatch(html, /\{\{name\}\}/);
   }
 });
@@ -48,7 +48,7 @@ test('il nome con caratteri speciali viene escapato', async (t) => {
 });
 
 test('HEAD senza corpo, POST non consentito', async (t) => {
-  const base = await listen(t, { name: 'Cable' });
+  const base = await listen(t, { name: 'vWire' });
   const head = await fetch(`${base}/`, { method: 'HEAD' });
   assert.equal(head.status, 200);
   assert.ok(Number(head.headers.get('content-length')) > 0);

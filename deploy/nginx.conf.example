@@ -6,11 +6,11 @@ map $http_upgrade $connection_upgrade {
     ''      close;
 }
 
-# --- Part 2: the site (e.g. /etc/nginx/sites-available/cable) ---
+# --- Part 2: the site (e.g. /etc/nginx/sites-available/vwire) ---
 server {
-    server_name cable.example.org;
+    server_name vwire.example.org;
     listen 80;
-    # Then: sudo certbot --nginx -d cable.example.org
+    # Then: sudo certbot --nginx -d vwire.example.org
 
     # The WebSocket used to pair the two devices (signaling only, never the files)
     location /ws {

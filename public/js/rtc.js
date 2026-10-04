@@ -41,7 +41,7 @@ export function createPeer({ sig, initiator, iceServers = [], onChannel, onState
         else pending.push(data.candidate);
       }
     } catch (err) {
-      console.error('[cable] signal', err);
+      console.error('[vwire] signal', err);
       onState?.('failed');
     }
   }

@@ -1,6 +1,6 @@
 # Third-party software
 
-Cable itself is released under the MIT License (see `LICENSE`).
+vWire itself is released under the MIT License (see `LICENSE`).
 It includes or depends on the following components.
 
 | Component | Use | License |

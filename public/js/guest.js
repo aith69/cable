@@ -170,7 +170,7 @@ export function startGuest(ctx, { id = null } = {}) {
       s.send({ type: 'join-code', code });
     } catch (err) {
       if (done) return;
-      console.error('[cable]', err);
+      console.error('[vwire]', err);
       showCodeError(t('error.generic'));
     }
   }
@@ -205,7 +205,7 @@ export function startGuest(ctx, { id = null } = {}) {
       .then((s) => s.send({ type: 'join', id }))
       .catch((err) => {
         if (done) return;
-        console.error('[cable]', err);
+        console.error('[vwire]', err);
         stop('error.generic');
       });
   }
