@@ -70,8 +70,7 @@ sudo systemctl enable --now cable
 curl http://localhost:3000/health
 ```
 
-The service runs as an unprivileged user and cannot write anywhere on the system. Edit the `Environment=`
-lines in the unit file to change the settings below, then `sudo systemctl restart cable`.
+The service runs as an unprivileged user and cannot write anywhere on the system. Settings go in `/opt/cable/config.json` (see Configuration below); restart with `sudo systemctl restart cable` after changing them.
 Check the node path in `ExecStart` with `command -v node`.
 
 Update:
@@ -93,28 +92,64 @@ otherwise anyone could fake the header and dodge the limit on wrong codes.
 
 ## Configuration
 
-Environment variables:
+All settings live in one optional file, `config.json`, in the application folder.
+Without it Cable uses the defaults.
 
-| Variable | Default | Meaning |
-|---|---|---|
-| `PORT` | `3000` | Listening port |
-| `HOST` | `0.0.0.0` | Listening address (`127.0.0.1` = this machine only) |
-| `SESSION_TTL_MS` | `60000` | How long a QR code or code stays valid while nobody has connected |
-| `MAX_SESSIONS` | `1000` | Maximum number of waiting sessions |
-| `TRUST_PROXY` | `false` | Read the client address from `X-Real-IP` (behind a reverse proxy only) |
-| `CODE_ATTEMPTS` | `3` | Wrong codes allowed per client in the window below |
-| `CODE_ATTEMPT_WINDOW_MS` | `60000` | Length of that window |
-| `ICE_SERVERS` | Google STUN | JSON list of STUN/TURN servers. `[]` = local network only |
+~~bash
+cp config.example.json config.json
+nano config.json            # keep only the keys you want to change
+sudo systemctl restart cable
+~~
+
+Example, to change the name and the port:
+
+~~json
+{
+  "name": "AirCable",
+  "port": 8080
+}
+~~
+
+`config.json` is ignored by git, so `git pull` never overwrites your settings.
+JSON has no comments, so this table is the documentation (a key starting with `_` is ignored,
+handy for your own notes).
+
+| Key | Default | Meaning | Environment variable |
+|---|---|---|---|
+| `name` | `Cable` | Name shown as page title and heading, 1-30 characters. Not translated | `APP_NAME` |
+| `port` | `3000` | Listening port | `PORT` |
+| `host` | `0.0.0.0` | Listening address (`127.0.0.1` = this machine only) | `HOST` |
+| `trustProxy` | `false` | Read the client address from `X-Real-IP` (behind a reverse proxy only) | `TRUST_PROXY` |
+| `sessionTtlMs` | `60000` | How long a QR code or code stays valid while nobody has connected | `SESSION_TTL_MS` |
+| `maxSessions` | `1000` | Maximum number of waiting sessions | `MAX_SESSIONS` |
+| `codeAttempts` | `3` | Wrong codes allowed per client in the window below | `CODE_ATTEMPTS` |
+| `codeAttemptWindowMs` | `60000` | Length of that window | `CODE_ATTEMPT_WINDOW_MS` |
+| `iceServers` | Google STUN | List of STUN/TURN servers. `[]` = local network only | `ICE_SERVERS` (JSON) |
+
+Values are read in this order, and the last one wins: built-in defaults, `config.json`, environment variables.
+If a value is not valid, or a key is misspelled, Cable refuses to start and says what is wrong
+(see `journalctl -u cable`). Set `CONFIG_FILE` to use a file in another location.
 
 Example with a TURN server (useful on strict networks, such as some mobile carriers; note that when a TURN
 server is used the encrypted data goes through it):
 
-```
-ICE_SERVERS=[{"urls":"stun:stun.l.google.com:19302"},{"urls":"turn:turn.example.org:3478","username":"user","credential":"secret"}]
-```
+~~json
+{
+  "iceServers": [
+    { "urls": "stun:stun.l.google.com:19302" },
+    { "urls": "turn:turn.example.org:3478", "username": "user", "credential": "secret" }
+  ]
+}
+~~
+
+If `config.json` contains TURN credentials, make it readable only by root and the service user:
+`sudo chown root:cable config.json && sudo chmod 640 config.json`.
 
 Limits: the receiving device keeps the file in memory until the transfer ends, so files are limited to
 **2 GiB** (**1 GiB** on iPhone and iPad). Larger files are refused with a clear message.
+
+The title font is configured separately, in `font.config.json`, because it is a build-time choice
+(see below).
 
 ## Customize
 
@@ -133,7 +168,7 @@ Commit the result.
 
 ```bash
 npm install          # includes the Less compiler
-npm test             # unit and integration tests (node --test, no extra dependencies)
+npm test             # unit and integration tests (node --test; ignores config.json)
 npm run build:css    # public/css/style.less -> style.css (commit the result)
 npm run font         # download the title font set in font.config.json
 ```

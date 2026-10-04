@@ -1,10 +1,15 @@
-import { createServer } from './server.js';
-import config from './config.js';
+const { default: config } = await import('./config.js').catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});
+const { createServer } = await import('./server.js');
+
+for (const warning of config.warnings) console.warn(`Attenzione: ${warning}`);
 
 const server = createServer();
 
 server.listen(config.port, config.host, () => {
-  console.log(`cable in ascolto su http://${config.host}:${config.port}`);
+  console.log(`${config.name} in ascolto su http://${config.host}:${config.port}`);
 });
 
 function shutdown() {
