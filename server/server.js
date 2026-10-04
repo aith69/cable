@@ -1,5 +1,6 @@
 import { createServer as createHttpServer } from 'node:http';
 import { createStaticHandler } from './static.js';
+import { createPageHandler } from './page.js';
 import { listLocales } from './locales.js';
 import { SessionManager } from './sessions.js';
 import { AttemptLimiter } from './ratelimit.js';
@@ -9,10 +10,13 @@ import config from './config.js';
 export function createServer(options = {}) {
   const publicDir = options.publicDir ?? config.publicDir;
   const serveStatic = createStaticHandler(publicDir);
+  const servePage = createPageHandler(publicDir, () => options.name ?? config.name);
 
   const server = createHttpServer((req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'no-referrer');
+
+    const pathname = req.url.split('?')[0];
 
     if (req.url === '/health') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -28,6 +32,13 @@ export function createServer(options = {}) {
       return listLocales(publicDir).then((locales) => {
         res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
         res.end(JSON.stringify({ locales }));
+      });
+    }
+
+    if ((req.method === 'GET' || req.method === 'HEAD') && (pathname === '/' || pathname === '/index.html')) {
+      return servePage(req, res).catch(() => {
+        if (!res.headersSent) res.writeHead(500);
+        res.end();
       });
     }
 

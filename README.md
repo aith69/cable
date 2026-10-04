@@ -153,6 +153,8 @@ The title font is configured separately, in `font.config.json`, because it is a 
 
 ## Customize
 
+**Name.** Set `name` in `config.json`. It is the page title and heading, and there is nothing else to edit. It is not translated. The title font is wide: with the default settings keep the name to 9 characters or fewer, or lower `titleSize` in `font.config.json` and run `npm run font`. Cable prints a warning at startup if the name is too long.
+
 **Languages.** The language is detected from the browser, with English as the fallback. Translations are the
 files in `public/locales`, named after the language (`en.json`, `it.json`, `pt-BR.json`, `zh-TW.json`...).
 To add a language, copy the file in that folder and run `npm test`: it checks that every key and placeholder
