@@ -21,12 +21,12 @@
     "less": "^4.9.1"
   },
   "author": "Alessandro Preti",
-  "homepage": "https://github.com/aith69/cable",
+  "homepage": "https://github.com/aith69/vWire",
   "bugs": {
-    "url": "https://github.com/aith69/cable/issues"
+    "url": "https://github.com/aith69/vWire/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aith69/cable.git"
+    "url": "git+https://github.com/aith69/vWire.git"
   }
 }
