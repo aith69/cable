@@ -234,3 +234,41 @@ h1 {
 }
 
 .emoji-big { font-size: 7rem; line-height: 1; }
+
+// Drag and drop: shown while a file is dragged over the home page
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg);
+  opacity: .94;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 1rem;
+    border: 3px dashed var(--fg);
+    border-radius: @radius;
+  }
+
+  &.invalid::before {
+    border-style: solid;
+    animation: drop-shake .3s;
+  }
+
+  p { margin: 0; font-size: 1.5rem; font-weight: 600; }
+}
+
+@keyframes drop-shake {
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop-overlay.invalid::before { animation: none; }
+}

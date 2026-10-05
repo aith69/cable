@@ -267,3 +267,44 @@ h1 {
   font-size: 7rem;
   line-height: 1;
 }
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  text-align: center;
+  background: var(--bg);
+  opacity: 0.94;
+  pointer-events: none;
+}
+.drop-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border: 3px dashed var(--fg);
+  border-radius: 14px;
+}
+.drop-overlay.invalid::before {
+  border-style: solid;
+  animation: drop-shake 0.3s;
+}
+.drop-overlay p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+@keyframes drop-shake {
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drop-overlay.invalid::before {
+    animation: none;
+  }
+}
