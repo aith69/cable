@@ -31,7 +31,7 @@ export function attachSignaling(
     try {
       pathname = new URL(req.url, 'http://localhost').pathname;
     } catch {
-      /* url non valido */
+      /* invalid url */
     }
     if (pathname !== path) {
       socket.write('HTTP/1.1 404 Not Found\r\nConnection: close\r\n\r\n');

@@ -19,13 +19,13 @@ export const DEFAULTS = {
 };
 
 export const MAX_NAME_LENGTH = 30;
-/** Con il font del titolo predefinito (Press Start 2P a 2rem) su uno schermo da 360 px. */
+/** With the default title font (Press Start 2P at 2rem) on a 360 px wide screen. */
 export const RECOMMENDED_NAME_LENGTH = 9;
 
 const CONTROL_CHARS = /[\u0000-\u001f\u007f]/;
 
-// Conversione dei valori che arrivano come testo dalle variabili d'ambiente.
-// Se il testo non è convertibile resta com'è, e il controllo successivo lo segnala.
+// Values coming from environment variables are text. If the text cannot be converted
+// it is left as it is, and the check that follows reports it.
 const toNumber = (text) => (/^\d+$/.test(text) ? Number(text) : text);
 const toBoolean = (text) => {
   const value = text.toLowerCase();
@@ -44,7 +44,7 @@ const toJson = (text) => {
 const intBetween = (min, max) => (value) =>
   Number.isInteger(value) && value >= min && value <= max
     ? null
-    : `un numero intero tra ${min} e ${max}`;
+    : `an integer between ${min} and ${max}`;
 
 function checkIceServers(value) {
   const valid =
@@ -60,7 +60,7 @@ function checkIceServers(value) {
     );
   return valid
     ? null
-    : 'una lista di server, per esempio [{"urls":"stun:stun.example.org:3478"}] (anche vuota: [])';
+    : 'a list of servers, for example [{"urls":"stun:stun.example.org:3478"}] (an empty list [] is fine)';
 }
 
 export const RULES = {
@@ -73,7 +73,7 @@ export const RULES = {
       value.trim().length <= MAX_NAME_LENGTH &&
       !CONTROL_CHARS.test(value)
         ? null
-        : `un testo di 1-${MAX_NAME_LENGTH} caratteri, senza caratteri di controllo`,
+        : `text of 1-${MAX_NAME_LENGTH} characters, without control characters`,
   },
   port: { env: 'PORT', parse: toNumber, check: intBetween(1, 65535) },
   host: {
@@ -82,12 +82,12 @@ export const RULES = {
     check: (value) =>
       typeof value === 'string' && /^\S+$/.test(value)
         ? null
-        : 'un indirizzo senza spazi, per esempio "0.0.0.0" o "127.0.0.1"',
+        : 'an address without spaces, for example "0.0.0.0" or "127.0.0.1"',
   },
   trustProxy: {
     env: 'TRUST_PROXY',
     parse: toBoolean,
-    check: (value) => (typeof value === 'boolean' ? null : 'true o false'),
+    check: (value) => (typeof value === 'boolean' ? null : 'true or false'),
   },
   sessionTtlMs: { env: 'SESSION_TTL_MS', parse: toNumber, check: intBetween(1000, 3_600_000) },
   maxSessions: { env: 'MAX_SESSIONS', parse: toNumber, check: intBetween(1, 1_000_000) },
@@ -101,9 +101,9 @@ export const RULES = {
 };
 
 /**
- * Unisce predefiniti, contenuto del file e variabili d'ambiente (l'ultimo vince).
- * Funzione pura: restituisce i valori, gli errori e gli avvisi.
- * Le chiavi del file che iniziano con "_" sono ignorate (note libere).
+ * Merges defaults, file contents and environment variables (the last one wins).
+ * Pure function: returns the values, the errors and the warnings.
+ * Keys of the file that start with "_" are ignored (free notes).
  */
 export function resolveConfig({ file = {}, env = {} } = {}) {
   const errors = [];
@@ -113,7 +113,7 @@ export function resolveConfig({ file = {}, env = {} } = {}) {
   for (const key of Object.keys(file)) {
     if (!key.startsWith('_') && !Object.hasOwn(RULES, key)) {
       errors.push(
-        `config.json: chiave sconosciuta "${key}" (chiavi valide: ${Object.keys(RULES).join(', ')})`,
+        `config.json: unknown key "${key}" (valid keys: ${Object.keys(RULES).join(', ')})`,
       );
     }
   }
@@ -121,14 +121,14 @@ export function resolveConfig({ file = {}, env = {} } = {}) {
   for (const [key, rule] of Object.entries(RULES)) {
     if (Object.hasOwn(file, key)) {
       const problem = rule.check(file[key]);
-      if (problem) errors.push(`config.json: "${key}" non valido, atteso ${problem}`);
+      if (problem) errors.push(`config.json: "${key}" is not valid, expected ${problem}`);
       else values[key] = file[key];
     }
     const raw = env[rule.env];
     if (typeof raw === 'string' && raw.trim() !== '') {
       const parsed = rule.parse(raw.trim());
       const problem = rule.check(parsed);
-      if (problem) errors.push(`${rule.env}: valore non valido, atteso ${problem}`);
+      if (problem) errors.push(`${rule.env}: invalid value, expected ${problem}`);
       else values[key] = parsed;
     }
   }
@@ -136,18 +136,18 @@ export function resolveConfig({ file = {}, env = {} } = {}) {
   values.name = values.name.trim();
   if (values.name.length > RECOMMENDED_NAME_LENGTH) {
     warnings.push(
-      `il nome "${values.name}" ha ${values.name.length} caratteri: con il font del titolo predefinito ` +
-        `ne entrano circa ${RECOMMENDED_NAME_LENGTH} su uno schermo da 360 px. ` +
-        `Riduci "titleSize" in font.config.json (poi npm run font) o scegli un nome più corto.`,
+      `the name "${values.name}" has ${values.name.length} characters: with the default title font ` +
+        `about ${RECOMMENDED_NAME_LENGTH} fit on a 360 px wide screen. ` +
+        `Lower "titleSize" in font.config.json (then run npm run font) or choose a shorter name.`,
     );
   }
   return { values, errors, warnings };
 }
 
 /**
- * Legge config.json (se esiste) e applica le variabili d'ambiente.
- * Con NODE_ENV=test il file viene ignorato, così i test non dipendono dalla configurazione locale.
- * Se CONFIG_FILE è impostato, il file deve esistere.
+ * Reads config.json (if it exists) and applies the environment variables.
+ * With NODE_ENV=test the file is ignored, so the tests do not depend on the local configuration.
+ * If CONFIG_FILE is set, the file must exist.
  */
 export function loadConfig({
   env = process.env,
@@ -161,23 +161,23 @@ export function loadConfig({
       text = readFileSync(path, 'utf8');
     } catch (err) {
       if (err.code !== 'ENOENT' || env.CONFIG_FILE) {
-        throw new Error(`Impossibile leggere ${path}: ${err.message}`);
+        throw new Error(`Cannot read ${path}: ${err.message}`);
       }
     }
     if (text !== null) {
       try {
         file = JSON.parse(text);
       } catch (err) {
-        throw new Error(`${path} non è un JSON valido: ${err.message}`);
+        throw new Error(`${path} is not valid JSON: ${err.message}`);
       }
       if (!file || typeof file !== 'object' || Array.isArray(file)) {
-        throw new Error(`${path} deve contenere un oggetto JSON, per esempio { "name": "vWire" }`);
+        throw new Error(`${path} must contain a JSON object, for example { "name": "vWire" }`);
       }
     }
   }
 
   const { values, errors, warnings } = resolveConfig({ file, env });
-  if (errors.length) throw new Error(`Configurazione non valida:\n  - ${errors.join('\n  - ')}`);
+  if (errors.length) throw new Error(`Invalid configuration:\n  - ${errors.join('\n  - ')}`);
   return { ...values, warnings };
 }
 

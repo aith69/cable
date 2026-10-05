@@ -58,6 +58,8 @@ test('install.sh --dry-run: elenca le azioni e non cambia nulla', async () => {
   assert.match(r.stdout, /"trustProxy": true/);
   assert.match(r.stdout, /demo-test\.service/);
   assert.match(r.stdout, /useradd/);
+  assert.match(r.stdout, /user demouser: would be created/);
+  assert.doesNotMatch(r.stdout, /user demouser: created|config\.json written/);
   await assert.rejects(access('/etc/systemd/system/demo-test.service'));
 });
 
@@ -70,6 +72,9 @@ test('install.sh --print-unit: utente, cartella e node nell\'unit', async () => 
   assert.match(r.stdout, /^ExecStart=\S*node server\/index\.js$/m);
   assert.match(r.stdout, /^Description=.*demo-test/m);
   assert.match(r.stdout, /^NoNewPrivileges=true$/m);
+  assert.match(r.stdout, /^\[Unit\]$/m);
+  assert.doesNotMatch(r.stdout, /To install by hand/);
+  assert.match(r.stdout.split('\n')[0], /^# Installed by deploy\/install\.sh/);
 });
 
 test('install.sh: impostazione non valida', async () => {
