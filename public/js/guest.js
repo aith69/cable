@@ -1,5 +1,6 @@
 import { connectSignaling } from './signaling.js';
 import { runTransfer } from './transfer.js';
+import { keepAwake } from './wakelock.js';
 import { CODE_LENGTH, digitsOf, formatCode } from './code.js';
 import { glyph } from './emoji.js';
 import { $, showScreen, showMessage } from './ui.js';
@@ -18,8 +19,10 @@ export function startGuest(ctx, { id = null } = {}) {
   let phase = 'code'; // 'code' | 'verify'
   const early = [];
 
+  const awake = keepAwake();
   const cleanup = () => {
     done = true;
+    awake.release();
     sig?.close();
   };
   const stop = (key) => {
