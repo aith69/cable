@@ -2,6 +2,7 @@ import { connectSignaling } from './signaling.js';
 import { renderQr } from './qr.js';
 import { startCountdown } from './countdown.js';
 import { runTransfer } from './transfer.js';
+import { keepAwake } from './wakelock.js';
 import { formatCode } from './code.js';
 import { glyph } from './emoji.js';
 import { $, showScreen, showMessage } from './ui.js';
@@ -17,8 +18,10 @@ export function startHost(ctx, { mode, file = null }) {
   let done = false;
   let stopTimer = () => {};
 
+  const awake = keepAwake();
   const cleanup = () => {
     done = true;
+    awake.release();
     stopTimer();
     sig?.close();
   };

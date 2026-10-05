@@ -77,5 +77,6 @@
   "emoji.basketball": "バスケットボール",
   "emoji.tennis": "テニスボール",
   "emoji.target": "的",
-  "emoji.trophy": "トロフィー"
+  "emoji.trophy": "トロフィー",
+  "drop.hint": "ここに1つのファイルをドロップ"
 }

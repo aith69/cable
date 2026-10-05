@@ -11,7 +11,7 @@ Works between phone and phone, computer and phone, and computer and computer.
 1. On the first device choose **Send a file** (and pick the file) or **Receive a file**. A QR code appears.
 2. The other device scans the QR code with its camera. If the first device sends, the transfer starts;
    if it receives, the second device taps **Upload file** and picks the file.
-3. A progress bar shows speed and time left. Either device can stop the transfer at any time.
+3. A progress bar shows speed and time left. Either device can stop the transfer at any time. The screen is kept on during a session, where the browser allows it.
 
 **No camera? Connect without QR.** Under the QR code, tap *Connect without QR* to get a 6-digit code
 (`123 - 456`). On the other device tap *I have a code* on the home page and type it. An emoji then shows
