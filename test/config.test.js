@@ -138,10 +138,10 @@ test('loadConfig: JSON non valido o valori errati fermano l\'avvio', async (t) =
   const run = (name) => () => loadConfig({ env: {}, path: join(dir, name), useFile: true });
 
   await writeFile(join(dir, 'broken.json'), '{ "port": 3000, }');
-  assert.throws(run('broken.json'), /JSON valido/);
+  assert.throws(run('broken.json'), /not valid JSON/);
 
   await writeFile(join(dir, 'list.json'), '[1, 2]');
-  assert.throws(run('list.json'), /oggetto JSON/);
+  assert.throws(run('list.json'), /JSON object/);
 
   await writeFile(join(dir, 'wrong.json'), JSON.stringify({ port: 'abc', colour: 'blu' }));
   assert.throws(run('wrong.json'), (err) => /"port"/.test(err.message) && /colour/.test(err.message));
@@ -150,7 +150,7 @@ test('loadConfig: JSON non valido o valori errati fermano l\'avvio', async (t) =
 test('loadConfig: CONFIG_FILE inesistente è un errore; useFile=false ignora il file', async (t) => {
   assert.throws(
     () => loadConfig({ env: { CONFIG_FILE: '/non/esiste/config.json' }, useFile: true }),
-    /Impossibile leggere/,
+    /Cannot read/,
   );
 
   const dir = await tempDir(t);
@@ -162,4 +162,12 @@ test('loadConfig: CONFIG_FILE inesistente è un errore; useFile=false ignora il 
 test('config.example.json coincide con i valori predefiniti', async () => {
   const example = JSON.parse(await readFile(join(root, 'config.example.json'), 'utf8'));
   assert.deepEqual(example, DEFAULTS);
+});
+
+test('i messaggi di errore sono in inglese', () => {
+  const { errors } = resolveConfig({ file: { port: 'abc', prot: 1 } });
+  assert.ok(errors.some((error) => /unknown key "prot"/.test(error)));
+  assert.ok(errors.some((error) => /"port" is not valid, expected an integer between 1 and 65535/.test(error)));
+  const fromEnv = resolveConfig({ env: { PORT: 'abc' } });
+  assert.match(fromEnv.errors[0], /^PORT: invalid value, expected an integer/);
 });

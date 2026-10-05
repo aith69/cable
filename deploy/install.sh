@@ -168,7 +168,7 @@ ensure_user() {
   else
     nologin=$(command -v nologin || echo /usr/sbin/nologin)
     run useradd --system --no-create-home --user-group --shell "$nologin" "$SVC_USER"
-    note "user $SVC_USER: created"
+    if (( DRY_RUN )); then note "user $SVC_USER: would be created"; else note "user $SVC_USER: created"; fi
   fi
 }
 
@@ -179,6 +179,9 @@ render_unit() {
     -v group="Group=$SVC_USER" \
     -v wd="WorkingDirectory=$APP_DIR" \
     -v cmd="ExecStart=$NODE_BIN server/index.js" '
+    BEGIN { print "# Installed by deploy/install.sh (template: deploy/vwire.service). Settings live in config.json in the app folder." }
+    /^\[Unit\]/ { started = 1 }
+    !started { next }
     /^Description=/ { print desc; next }
     /^User=/ { print user; next }
     /^Group=/ { print group; next }
@@ -299,7 +302,7 @@ do_install() {
       run cp -p "$CONFIG_PATH" "$CONFIG_PATH.bak-$(date +%Y%m%d-%H%M%S)"
     fi
     printf '%s\n' "$CONFIG_JSON" | install_file "$CONFIG_PATH" 640 "root:$SVC_USER"
-    note "config.json written"
+    if (( DRY_RUN )); then note "config.json: would be written"; else note "config.json written"; fi
   elif [[ -f $CONFIG_PATH ]]; then
     run chown "root:$SVC_USER" "$CONFIG_PATH"
     run chmod 640 "$CONFIG_PATH"

@@ -4,12 +4,12 @@ const { default: config } = await import('./config.js').catch((err) => {
 });
 const { createServer } = await import('./server.js');
 
-for (const warning of config.warnings) console.warn(`Attenzione: ${warning}`);
+for (const warning of config.warnings) console.warn(`Warning: ${warning}`);
 
 const server = createServer();
 
 server.listen(config.port, config.host, () => {
-  console.log(`${config.name} in ascolto su http://${config.host}:${config.port}`);
+  console.log(`${config.name} listening on http://${config.host}:${config.port}`);
 });
 
 function shutdown() {
