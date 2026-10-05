@@ -272,3 +272,31 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .drop-overlay.invalid::before { animation: none; }
 }
+
+// Small transitions: opacity and transform only, short, and off for people who ask for less motion
+@ease: cubic-bezier(.2, .7, .2, 1);
+
+@keyframes screen-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes pop-in { from { opacity: 0; transform: scale(.94); } }
+@keyframes fade-in { from { opacity: 0; } }
+
+.screen { animation: screen-in .22s @ease backwards; }
+
+.qr:empty { visibility: hidden; }
+.qr.pop { animation: pop-in .3s @ease backwards; }
+
+.emoji-option { animation: pop-in .25s @ease backwards; }
+.emoji-option:nth-child(2) { animation-delay: .05s; }
+.emoji-option:nth-child(3) { animation-delay: .1s; }
+.emoji-big { animation: pop-in .3s @ease backwards; }
+
+.drop-overlay { animation: fade-in .12s ease-out backwards; }
+.link { transition: color .15s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: .01ms !important;
+  }
+}

@@ -308,3 +308,56 @@ h1 {
     animation: none;
   }
 }
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.screen {
+  animation: screen-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+.qr:empty {
+  visibility: hidden;
+}
+.qr.pop {
+  animation: pop-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+.emoji-option {
+  animation: pop-in 0.25s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+.emoji-option:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.emoji-option:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.emoji-big {
+  animation: pop-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+.drop-overlay {
+  animation: fade-in 0.12s ease-out backwards;
+}
+.link {
+  transition: color 0.15s;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}

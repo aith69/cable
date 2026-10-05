@@ -19,4 +19,8 @@ export function renderQr(container, text) {
   });
   // La libreria scrive il testo (con l'ID di sessione) nel tooltip: lo togliamo.
   container.removeAttribute('title');
+  // Restart the entrance animation every time a code is drawn.
+  container.classList.remove('pop');
+  void container.offsetWidth;
+  container.classList.add('pop');
 }
