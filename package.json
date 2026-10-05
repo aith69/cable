@@ -1,6 +1,6 @@
 {
   "name": "vwire",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Direct device-to-device file transfer in the browser via QR code",
   "type": "module",
   "license": "MIT",
