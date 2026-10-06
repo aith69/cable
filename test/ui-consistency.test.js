@@ -50,3 +50,12 @@ test('ogni emoji del catalogo ha un nome tradotto', () => {
     assert.ok(Object.hasOwn(en, `emoji.${id}`), `manca emoji.${id} in en.json`);
   }
 });
+
+test('ogni pulsante di index.html è usato da almeno uno script (nessun pulsante senza gestore)', () => {
+  const buttonIds = [...html.matchAll(/<button\b[^>]*\sid="([^"]+)"/g)].map((m) => m[1]);
+  assert.ok(buttonIds.length >= 10, 'pochi pulsanti trovati: la regola di ricerca non funziona?');
+  for (const id of buttonIds) {
+    const used = sources.some(([, source]) => source.includes(`$('${id}')`));
+    assert.ok(used, `il pulsante #${id} non è usato da nessuno script: manca il gestore?`);
+  }
+});

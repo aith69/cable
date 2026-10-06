@@ -1,6 +1,6 @@
 {
-  "family": "Press Start 2P",
-  "weight": "400",
+  "family": "Doto",
+  "weight": "700",
   "subsets": ["latin"],
-  "titleSize": "2rem"
+  "titleSize": "4rem"
 }

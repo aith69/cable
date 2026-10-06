@@ -41,6 +41,7 @@ const ctx = {
 };
 
 $('btn-receive').onclick = () => startHost(ctx, { mode: 'receive' });
+$('btn-code').onclick = () => startGuest(ctx);
 
 /** Starts a transfer from the home page, unless the selection is over the limit. */
 function sendFile(file) {
