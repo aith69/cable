@@ -159,6 +159,7 @@ handy for your own notes).
 | `trustProxy` | `false` | Read the client address from `X-Real-IP` (behind a reverse proxy only) | `TRUST_PROXY` |
 | `sessionTtlMs` | `60000` | How long a QR code or code stays valid while nobody has connected | `SESSION_TTL_MS` |
 | `maxSessions` | `1000` | Maximum number of waiting sessions | `MAX_SESSIONS` |
+| `maxTransferMb` | `512` | Largest transfer allowed, in MB (1-2048). Applies to what the sender selects and to what the receiver accepts | `MAX_TRANSFER_MB` |
 | `codeAttempts` | `3` | Wrong codes allowed per client in the window below | `CODE_ATTEMPTS` |
 | `codeAttemptWindowMs` | `60000` | Length of that window | `CODE_ATTEMPT_WINDOW_MS` |
 | `iceServers` | Google STUN | List of STUN/TURN servers. `[]` = local network only | `ICE_SERVERS` (JSON) |
@@ -183,7 +184,7 @@ If `config.json` contains TURN credentials, make it readable only by root and th
 `sudo chown root:vwire config.json && sudo chmod 640 config.json`.
 
 Limits: the receiving device keeps the file in memory until the transfer ends, so files are limited to
-**2 GiB** (**1 GiB** on iPhone and iPad). Larger files are refused with a clear message.
+**2 GiB** (**1 GiB** on iPhone and iPad). Larger files are refused with a clear message, and `maxTransferMb` (512 MB by default) lowers the limit further.
 
 The title font is configured separately, in `font.config.json`, because it is a build-time choice
 (see below).

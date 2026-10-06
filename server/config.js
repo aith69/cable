@@ -13,6 +13,7 @@ export const DEFAULTS = {
   trustProxy: false,
   sessionTtlMs: 60_000,
   maxSessions: 1000,
+  maxTransferMb: 512,
   codeAttempts: 3,
   codeAttemptWindowMs: 60_000,
   iceServers: DEFAULT_ICE_SERVERS,
@@ -91,6 +92,7 @@ export const RULES = {
   },
   sessionTtlMs: { env: 'SESSION_TTL_MS', parse: toNumber, check: intBetween(1000, 3_600_000) },
   maxSessions: { env: 'MAX_SESSIONS', parse: toNumber, check: intBetween(1, 1_000_000) },
+  maxTransferMb: { env: 'MAX_TRANSFER_MB', parse: toNumber, check: intBetween(1, 2048) },
   codeAttempts: { env: 'CODE_ATTEMPTS', parse: toNumber, check: intBetween(1, 1000) },
   codeAttemptWindowMs: {
     env: 'CODE_ATTEMPT_WINDOW_MS',

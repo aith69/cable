@@ -40,7 +40,7 @@ Options:
   -y, --yes           do not ask anything: use the defaults and the --set values
       --set KEY=VAL   set a configuration value (repeatable), for example --set port=3001
                       keys: name, port, host, trustProxy, sessionTtlMs, maxSessions,
-                      codeAttempts, codeAttemptWindowMs, iceServers
+                      maxTransferMb, codeAttempts, codeAttemptWindowMs, iceServers
                       With --set, config.json is rewritten (the old one is saved as config.json.bak-DATE)
       --service NAME  systemd service name (default: the folder name in lowercase, e.g. vwire-main)
       --user NAME     system user that runs the service (default: vwire, created if missing)
@@ -227,6 +227,7 @@ collect_settings() {
   prompt_setting sessionTtlMs "How long a QR code stays valid while nobody has connected, in milliseconds"
   if confirm "Change the advanced settings too?" n; then
     prompt_setting maxSessions "Maximum number of waiting sessions"
+    prompt_setting maxTransferMb "Largest transfer allowed, in MB (1-2048)"
     prompt_setting codeAttempts "Wrong codes allowed per client in the window below"
     prompt_setting codeAttemptWindowMs "Length of that window, in milliseconds"
     prompt_setting iceServers "STUN/TURN servers as JSON ([] = local network only)"

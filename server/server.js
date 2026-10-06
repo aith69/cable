@@ -25,7 +25,12 @@ export function createServer(options = {}) {
 
     if (req.url === '/api/config') {
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-      return res.end(JSON.stringify({ iceServers: options.iceServers ?? config.iceServers }));
+      return res.end(
+        JSON.stringify({
+          iceServers: options.iceServers ?? config.iceServers,
+          maxTransferMb: options.maxTransferMb ?? config.maxTransferMb,
+        }),
+      );
     }
 
     if (req.url === '/api/locales') {

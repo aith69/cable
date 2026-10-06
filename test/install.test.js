@@ -108,3 +108,13 @@ test('make-config: valori e chiavi non validi', async () => {
   assert.equal((await configTool('colour=blu')).code, 1);
   assert.equal((await configTool('--get', 'nope')).code, 1);
 });
+
+test('install.sh: maxTransferMb tra le impostazioni, con i suoi limiti', async () => {
+  const ok = await install('--dry-run', '--yes', '--set', 'maxTransferMb=256');
+  assert.equal(ok.code, 0, ok.stderr);
+  assert.match(ok.stdout, /"maxTransferMb": 256/);
+
+  const bad = await install('--dry-run', '--yes', '--set', 'maxTransferMb=4096');
+  assert.equal(bad.code, 1);
+  assert.match(bad.stderr, /maxTransferMb/);
+});

@@ -48,6 +48,7 @@ test('variabili d\'ambiente: numeri, booleani e JSON; i valori vuoti sono ignora
       MAX_SESSIONS: '50',
       CODE_ATTEMPTS: '5',
       CODE_ATTEMPT_WINDOW_MS: '30000',
+      MAX_TRANSFER_MB: '256',
       ICE_SERVERS: '[]',
     },
   });
@@ -61,6 +62,7 @@ test('variabili d\'ambiente: numeri, booleani e JSON; i valori vuoti sono ignora
     maxSessions: 50,
     codeAttempts: 5,
     codeAttemptWindowMs: 30000,
+    maxTransferMb: 256,
     iceServers: [],
   });
 
@@ -79,6 +81,7 @@ test('valori non validi: un errore chiaro per ogni chiave', () => {
     maxSessions: [0],
     codeAttempts: [0],
     codeAttemptWindowMs: [10],
+    maxTransferMb: [0, 2049, 1.5, '5'],
     iceServers: ['stun:x', [{ url: 'x' }], [{ urls: 5 }], {}],
   };
   for (const [key, list] of Object.entries(bad)) {
@@ -170,4 +173,13 @@ test('i messaggi di errore sono in inglese', () => {
   assert.ok(errors.some((error) => /"port" is not valid, expected an integer between 1 and 65535/.test(error)));
   const fromEnv = resolveConfig({ env: { PORT: 'abc' } });
   assert.match(fromEnv.errors[0], /^PORT: invalid value, expected an integer/);
+});
+
+test('maxTransferMb: predefinito 512, accetta da 1 a 2048, le variabili hanno la precedenza', () => {
+  assert.equal(DEFAULTS.maxTransferMb, 512);
+  assert.equal(resolveConfig({ file: { maxTransferMb: 1 } }).values.maxTransferMb, 1);
+  assert.equal(resolveConfig({ file: { maxTransferMb: 2048 } }).values.maxTransferMb, 2048);
+  assert.equal(resolveConfig({ env: { MAX_TRANSFER_MB: '100' } }).values.maxTransferMb, 100);
+  const both = resolveConfig({ file: { maxTransferMb: 100 }, env: { MAX_TRANSFER_MB: '200' } });
+  assert.equal(both.values.maxTransferMb, 200);
 });
