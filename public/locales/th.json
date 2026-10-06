@@ -78,5 +78,6 @@
   "emoji.tennis": "ลูกเทนนิส",
   "emoji.target": "เป้า",
   "emoji.trophy": "ถ้วยรางวัล",
-  "drop.hint": "วางไฟล์เดียวที่นี่"
+  "drop.hint": "วางไฟล์เดียวที่นี่",
+  "limit.exceeded": "การเลือกมีขนาดใหญ่เกินไป: {size} (สูงสุด {max})"
 }

@@ -78,5 +78,6 @@
   "emoji.tennis": "Minge de tenis",
   "emoji.target": "Țintă",
   "emoji.trophy": "Trofeu",
-  "drop.hint": "Plasează un singur fișier aici"
+  "drop.hint": "Plasează un singur fișier aici",
+  "limit.exceeded": "Selecția este prea mare: {size} (maximum {max})"
 }

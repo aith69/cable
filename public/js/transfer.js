@@ -4,6 +4,7 @@ import { createReceiver } from './receiver.js';
 import { encodeControl, parseControl, maxReceiveBytes } from './protocol.js';
 import { SpeedMeter, formatBytes, formatSpeed, formatEta } from './format.js';
 import { saveBlob } from './download.js';
+import { receiveLimit } from './limits.js';
 import { $, showScreen } from './ui.js';
 
 const CONNECT_TIMEOUT_MS = 20_000;
@@ -112,7 +113,10 @@ export function runTransfer(ctx, { sig, initiator, role, file = null, onEnd }) {
     opened = true;
     clearTimeout(connectTimer);
     if (role === 'receive') {
-      const limit = maxReceiveBytes(navigator.userAgent, navigator.maxTouchPoints);
+      const limit = receiveLimit(
+        maxReceiveBytes(navigator.userAgent, navigator.maxTouchPoints),
+        ctx.maxTransferBytes,
+      );
       worker = createReceiver({
         maxBytes: limit,
         send: sendControl,

@@ -78,5 +78,6 @@
   "emoji.tennis": "Tenisový míček",
   "emoji.target": "Terč",
   "emoji.trophy": "Trofej",
-  "drop.hint": "Pusťte sem jeden soubor"
+  "drop.hint": "Pusťte sem jeden soubor",
+  "limit.exceeded": "Výběr je příliš velký: {size} (maximum {max})"
 }

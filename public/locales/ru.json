@@ -78,5 +78,6 @@
   "emoji.tennis": "Теннисный мяч",
   "emoji.target": "Мишень",
   "emoji.trophy": "Кубок",
-  "drop.hint": "Перетащите сюда один файл"
+  "drop.hint": "Перетащите сюда один файл",
+  "limit.exceeded": "Выбор слишком большой: {size} (максимум {max})"
 }

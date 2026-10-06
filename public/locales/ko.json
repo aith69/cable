@@ -78,5 +78,6 @@
   "emoji.tennis": "테니스공",
   "emoji.target": "과녁",
   "emoji.trophy": "트로피",
-  "drop.hint": "여기에 파일 하나를 놓으세요"
+  "drop.hint": "여기에 파일 하나를 놓으세요",
+  "limit.exceeded": "선택한 항목이 너무 큽니다: {size} (최대 {max})"
 }

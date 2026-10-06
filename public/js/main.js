@@ -1,9 +1,11 @@
 import { loadTranslations, createTranslator, applyTranslations } from './i18n.js';
 import { randomDarkTheme, applyTheme } from './theme.js';
-import { $, showScreen } from './ui.js';
+import { $, showScreen, showMessage } from './ui.js';
 import { startHost } from './host.js';
 import { startGuest } from './guest.js';
 import { attachDrop } from './drop.js';
+import { checkSize, parseServerConfig } from './limits.js';
+import { formatBytes } from './format.js';
 
 applyTheme(document, randomDarkTheme());
 
@@ -15,22 +17,22 @@ const { lang, messages } = await loadTranslations({ languages: preferred });
 const t = createTranslator(messages);
 applyTranslations(document, t, lang);
 
-async function loadIceServers() {
+async function loadServerConfig() {
   try {
     const res = await fetch('/api/config', { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data.iceServers)) return data.iceServers;
-    }
+    if (res.ok) return parseServerConfig(await res.json());
   } catch {
-    /* si prosegue senza server ICE: funziona solo in rete locale */
+    /* without the server settings: no STUN servers (local network only) and the default size limit */
   }
-  return [];
+  return parseServerConfig(null);
 }
+
+const serverConfig = await loadServerConfig();
 
 const ctx = {
   t,
-  iceServers: await loadIceServers(),
+  iceServers: serverConfig.iceServers,
+  maxTransferBytes: serverConfig.maxTransferBytes,
   signalingUrl: `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`,
   goHome() {
     history.replaceState(null, '', location.pathname + location.search);
@@ -39,9 +41,18 @@ const ctx = {
 };
 
 $('btn-receive').onclick = () => startHost(ctx, { mode: 'receive' });
-$('btn-code').onclick = () => startGuest(ctx);
 
-const sendFile = (file) => startHost(ctx, { mode: 'send', file });
+/** Starts a transfer from the home page, unless the selection is over the limit. */
+function sendFile(file) {
+  const check = checkSize([file], ctx.maxTransferBytes);
+  if (!check.ok) {
+    return showMessage(
+      t('limit.exceeded', { size: formatBytes(check.total), max: formatBytes(check.max) }),
+      { onHome: ctx.goHome },
+    );
+  }
+  startHost(ctx, { mode: 'send', file });
+}
 
 const fileInput = $('file-send');
 $('btn-send').onclick = () => fileInput.click();

@@ -78,5 +78,6 @@
   "emoji.tennis": "Pallina da tennis",
   "emoji.target": "Bersaglio",
   "emoji.trophy": "Trofeo",
-  "drop.hint": "Rilascia qui un solo file"
+  "drop.hint": "Rilascia qui un solo file",
+  "limit.exceeded": "Selezione troppo grande: {size} (massimo {max})"
 }

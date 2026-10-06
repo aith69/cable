@@ -78,5 +78,6 @@
   "emoji.tennis": "Tennisball",
   "emoji.target": "Zielscheibe",
   "emoji.trophy": "Trophäe",
-  "drop.hint": "Eine einzelne Datei hier ablegen"
+  "drop.hint": "Eine einzelne Datei hier ablegen",
+  "limit.exceeded": "Auswahl zu groß: {size} (maximal {max})"
 }

@@ -78,5 +78,6 @@
   "emoji.tennis": "Bola tenis",
   "emoji.target": "Sasaran",
   "emoji.trophy": "Trofi",
-  "drop.hint": "Letakkan satu file di sini"
+  "drop.hint": "Letakkan satu file di sini",
+  "limit.exceeded": "Pilihan terlalu besar: {size} (maksimum {max})"
 }

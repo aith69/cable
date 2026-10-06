@@ -78,5 +78,6 @@
   "emoji.tennis": "Tennisball",
   "emoji.target": "Skyteskive",
   "emoji.trophy": "Trofé",
-  "drop.hint": "Slipp én fil her"
+  "drop.hint": "Slipp én fil her",
+  "limit.exceeded": "Utvalget er for stort: {size} (maks. {max})"
 }

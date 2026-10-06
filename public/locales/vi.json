@@ -78,5 +78,6 @@
   "emoji.tennis": "Bóng tennis",
   "emoji.target": "Bia",
   "emoji.trophy": "Cúp",
-  "drop.hint": "Thả một tệp vào đây"
+  "drop.hint": "Thả một tệp vào đây",
+  "limit.exceeded": "Lựa chọn quá lớn: {size} (tối đa {max})"
 }

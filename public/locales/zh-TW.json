@@ -78,5 +78,6 @@
   "emoji.tennis": "網球",
   "emoji.target": "靶子",
   "emoji.trophy": "獎盃",
-  "drop.hint": "將單一檔案拖放到此處"
+  "drop.hint": "將單一檔案拖放到此處",
+  "limit.exceeded": "所選內容過大：{size}（上限 {max}）"
 }

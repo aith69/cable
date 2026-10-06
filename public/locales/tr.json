@@ -78,5 +78,6 @@
   "emoji.tennis": "Tenis topu",
   "emoji.target": "Hedef",
   "emoji.trophy": "Kupa",
-  "drop.hint": "Buraya tek bir dosya bırakın"
+  "drop.hint": "Buraya tek bir dosya bırakın",
+  "limit.exceeded": "Seçim çok büyük: {size} (en fazla {max})"
 }

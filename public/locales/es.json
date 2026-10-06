@@ -78,5 +78,6 @@
   "emoji.tennis": "Pelota de tenis",
   "emoji.target": "Diana",
   "emoji.trophy": "Trofeo",
-  "drop.hint": "Suelta un solo archivo aquí"
+  "drop.hint": "Suelta un solo archivo aquí",
+  "limit.exceeded": "Selección demasiado grande: {size} (máximo {max})"
 }

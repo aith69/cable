@@ -78,5 +78,6 @@
   "emoji.tennis": "Tennispallo",
   "emoji.target": "Maalitaulu",
   "emoji.trophy": "Palkinto",
-  "drop.hint": "Pudota yksi tiedosto tähän"
+  "drop.hint": "Pudota yksi tiedosto tähän",
+  "limit.exceeded": "Valinta on liian suuri: {size} (enintään {max})"
 }

@@ -78,5 +78,6 @@
   "emoji.tennis": "Balle de tennis",
   "emoji.target": "Cible",
   "emoji.trophy": "Trophée",
-  "drop.hint": "Déposez un seul fichier ici"
+  "drop.hint": "Déposez un seul fichier ici",
+  "limit.exceeded": "Sélection trop volumineuse : {size} (maximum {max})"
 }

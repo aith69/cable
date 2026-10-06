@@ -78,5 +78,6 @@
   "emoji.tennis": "Tennisbal",
   "emoji.target": "Doelwit",
   "emoji.trophy": "Trofee",
-  "drop.hint": "Zet één bestand hier neer"
+  "drop.hint": "Zet één bestand hier neer",
+  "limit.exceeded": "Selectie te groot: {size} (maximaal {max})"
 }

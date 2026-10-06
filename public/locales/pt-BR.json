@@ -78,5 +78,6 @@
   "emoji.tennis": "Bola de tênis",
   "emoji.target": "Alvo",
   "emoji.trophy": "Troféu",
-  "drop.hint": "Solte um único arquivo aqui"
+  "drop.hint": "Solte um único arquivo aqui",
+  "limit.exceeded": "Seleção grande demais: {size} (máximo {max})"
 }

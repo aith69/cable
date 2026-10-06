@@ -78,5 +78,6 @@
   "emoji.tennis": "Μπάλα τένις",
   "emoji.target": "Στόχος",
   "emoji.trophy": "Τρόπαιο",
-  "drop.hint": "Αφήστε ένα αρχείο εδώ"
+  "drop.hint": "Αφήστε ένα αρχείο εδώ",
+  "limit.exceeded": "Η επιλογή είναι πολύ μεγάλη: {size} (μέγιστο {max})"
 }

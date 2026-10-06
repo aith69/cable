@@ -78,5 +78,6 @@
   "emoji.tennis": "Tennisbold",
   "emoji.target": "Skydeskive",
   "emoji.trophy": "Trofæ",
-  "drop.hint": "Slip én fil her"
+  "drop.hint": "Slip én fil her",
+  "limit.exceeded": "Valget er for stort: {size} (maksimum {max})"
 }

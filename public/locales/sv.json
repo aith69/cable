@@ -78,5 +78,6 @@
   "emoji.tennis": "Tennisboll",
   "emoji.target": "Måltavla",
   "emoji.trophy": "Trofé",
-  "drop.hint": "Släpp en enda fil här"
+  "drop.hint": "Släpp en enda fil här",
+  "limit.exceeded": "Urvalet är för stort: {size} (högst {max})"
 }

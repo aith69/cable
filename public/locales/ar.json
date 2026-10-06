@@ -78,5 +78,6 @@
   "emoji.tennis": "كرة تنس",
   "emoji.target": "هدف",
   "emoji.trophy": "كأس",
-  "drop.hint": "أفلت ملفًا واحدًا هنا"
+  "drop.hint": "أفلت ملفًا واحدًا هنا",
+  "limit.exceeded": "التحديد كبير جدًا: {size} (الحد الأقصى {max})"
 }

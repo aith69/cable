@@ -3,6 +3,8 @@ import { runTransfer } from './transfer.js';
 import { keepAwake } from './wakelock.js';
 import { CODE_LENGTH, digitsOf, formatCode } from './code.js';
 import { glyph } from './emoji.js';
+import { checkSize } from './limits.js';
+import { formatBytes } from './format.js';
 import { $, showScreen, showMessage } from './ui.js';
 
 /**
@@ -106,6 +108,18 @@ export function startGuest(ctx, { id = null } = {}) {
       input.onchange = () => {
         const file = input.files[0];
         if (!file) return;
+        const check = checkSize([file], ctx.maxTransferBytes);
+        if (!check.ok) {
+          // Too big: say so under the button and let the user pick another file.
+          input.value = '';
+          status.textContent = t('limit.exceeded', {
+            size: formatBytes(check.total),
+            max: formatBytes(check.max),
+          });
+          status.hidden = false;
+          return;
+        }
+        status.hidden = true;
         transfer.setFile(file);
         transfer.show();
       };

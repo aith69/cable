@@ -78,5 +78,6 @@
   "emoji.tennis": "テニスボール",
   "emoji.target": "的",
   "emoji.trophy": "トロフィー",
-  "drop.hint": "ここに1つのファイルをドロップ"
+  "drop.hint": "ここに1つのファイルをドロップ",
+  "limit.exceeded": "選択内容が大きすぎます：{size}（最大 {max}）"
 }
