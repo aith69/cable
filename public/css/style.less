@@ -300,3 +300,36 @@ h1 {
     transition-duration: .01ms !important;
   }
 }
+
+// Preparation of a zip: a ring that fills up, with a single word in the middle
+.ring {
+  position: relative;
+  width: 11rem;
+  height: 11rem;
+  display: grid;
+  place-items: center;
+
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  circle { fill: none; stroke-width: 6; }
+  .ring-track { stroke: var(--border); }
+  .ring-fill {
+    stroke: var(--fg);
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset .2s linear;
+  }
+
+  .ring-label {
+    font-family: var(--font-title, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+    font-size: 1.5rem;
+    font-weight: var(--title-weight, 600);
+  }
+}
